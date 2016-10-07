@@ -80,7 +80,9 @@ def self.all_students_in_grade_x(x)
       WHERE grade = ?
       ;
     SQL
-    DB[:conn].execute(sql, x)
+    DB[:conn].execute(sql, x).map do |row|
+      self.new_from_db(row)
+    end
     
   end 
 
@@ -97,18 +99,19 @@ def self.all_students_in_grade_x(x)
   end 
 
   def self.first_x_students_in_grade_10(x)
-      number = x-1
 
       sql = <<-SQL
       SELECT *
       FROM students
       WHERE grade = 10
-      ORDER BY students.id;
+      ORDER BY students.id
+      LIMIT '#{x}';
     SQL
     DB[:conn].execute(sql).map do |row|
       self.new_from_db(row)
-    end[0..number]
+    end
   end 
+
     #poop[0..X-1]
   def self.first_student_in_grade_10
       #number = x-1
